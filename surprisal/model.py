@@ -48,17 +48,10 @@ class HuggingFaceModel(Model):
             self.model_id, 
             torch_dtype=precisions[precision],
             trust_remote_code=trust_remote_code,
+            device_map = 'auto'
         )
         self.model.eval()
-        self.to(device)  # initializes a variable called `device`
-
-    def to(self, device: str):
-        """
-        stateful method to move the model to specified device
-        and also track device for moving any inputs
-        """
-        self.device = device
-        self.model.to(self.device)
+        self.device = self.model.device
 
     def tokenize(self, textbatch: typing.Union[typing.List, str], max_length=1024):
         if type(textbatch) is str:
